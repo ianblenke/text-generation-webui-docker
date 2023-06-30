@@ -61,9 +61,20 @@ RUN echo "$BUILD_DATE" > /build_date.txt
 # Copy and enable all scripts
 COPY ./scripts /scripts
 RUN chmod +x /scripts/*
+# Install oobabot-plugin
+RUN pip install textgen oobabot-plugin
+RUN oobabot-plugin install
+RUN pip install -r extensions/api/requirements.txt
+RUN pip install -r extensions/openai/requirements.txt
+RUN pip install -r extensions/silero_tts/requirements.txt
+RUN pip install -r extensions/whisper_stt/requirements.txt
+RUN pip install -r extensions/elevenlabs_tts/requirements.txt
+RUN pip install oobabot
+RUN apt-get install -y curl
+RUN pip install pynacl
+
 # Run
 ENTRYPOINT ["/scripts/docker-entrypoint.sh"]
-
 
 # VARIANT BUILDS
 FROM base AS cuda

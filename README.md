@@ -1,4 +1,36 @@
 # Introduction
+
+This is a fork of oobabooga/text-generation-webui with an example config and Wizard-Vicuna-13B-Uncensored-SuperHOT-8K-GPTQ model.
+
+The configuration here is setup to run on a cuda GPU with at least 24G of RAM (RTX3090, RTX4090, etc).
+
+To use, make sure you have git lfs installed, and then run:
+
+	cp .env.example .env
+
+Edit that file to set your bot's DISCORD_TOKEN.
+
+Next, you should edit the `config/oobabot/config.yaml` file with your bot's information.
+
+Finally, pull the model and build everything.
+
+	git submodule update --init --recursive
+	docker-compose build
+	docker-compose up --force-recreate -d
+	docker-compose logs -f
+
+Alternatively, use the Makefile for the same:
+
+	make
+
+The above is idempotent and should reset the state whenever run.
+
+The bot should connect to your discord server and you should be able to chat with it.
+
+You should also now be able to open a web browser to :7860 and see the oobabooga text-generation-webui.
+
+# Parent project Introduction
+
 This project dockerises the deployment of [oobabooga/text-generation-webui](https://github.com/oobabooga/text-generation-webui) and its variants. It provides a default configuration (corresponding to a vanilla deployment of the application) as well as pre-configured support for other set-ups (e.g., latest `llama-cpp-python` with GPU offloading, the more recent `triton` and `cuda` branches of GPTQ). The images are available on Docker Hub: [https://hub.docker.com/r/atinoda/text-generation-webui](https://hub.docker.com/r/atinoda/text-generation-webui)
 
 *This goal of this project is to be to [oobabooga/text-generation-webui](https://github.com/oobabooga/text-generation-webui), what [AbdBarho/stable-diffusion-webui-docker](https://github.com/AbdBarho/stable-diffusion-webui-docker) is to [AUTOMATIC1111/stable-diffusion-webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui).*

@@ -1,5 +1,19 @@
 version: "3"
 services:
+  oobabot:
+    build:
+      context: .
+      target: default  # Specify the variant to build
+    command: oobabot -c /oobabot/config.yaml
+    volumes:
+    - ./config/oobabot:/oobabot
+    environment:
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+    restart: always
+    depends_on:
+      text-generation-webui-docker:
+        condition: service_healthy
+
   text-generation-webui-docker:
     build:
       context: .
@@ -8,13 +22,14 @@ services:
 #        - LCL_SRC_DIR=text-generation-webui  # Developers - see Dockerfile app_base
     container_name: text-generation-webui
     environment:
-      - EXTRA_LAUNCH_ARGS="--listen --verbose" # Custom launch args (e.g., --model MODEL_NAME)
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - EXTRA_LAUNCH_ARGS="--listen --verbose --loader ExLlama --extensions api openapi oobabot-plugin" # Custom launch args (e.g., --model MODEL_NAME)
 #      - BUILD_EXTENSIONS_LIVE="silero_tts whisper_stt" # Install named extensions during every container launch. THIS WILL SIGNIFICANLTLY SLOW LAUNCH TIME.
     ports:
       - 7860:7860  # Default web port
-#      - 5000:5000  # Default API port
-#      - 5005:5005  # Default streaming port
-#      - 5001:5001  # Default OpenAI API extension port
+      - 5000:5000  # Default API port
+      - 5005:5005  # Default streaming port
+      - 5001:5001  # Default OpenAI API extension port
     volumes:
       - ./config/loras:/app/loras
       - ./config/models:/app/models
@@ -22,12 +37,20 @@ services:
       - ./config/prompts:/app/prompts
       - ./config/softprompts:/app/softprompts
       - ./config/training:/app/training
+      - ./config/characters:/app/characters
 #      - ./config/extensions:/app/extensions
     logging:
       driver:  json-file
       options:
         max-file: "3"   # number of files or file count
         max-size: '10m'
+    healthcheck:
+      test: curl -f http://localhost:7860 || exit 1
+      interval: 5s
+      timeout: 10s
+      retries: 30
+      start_period: 5s
+    restart: always
     deploy:
         resources:
           reservations:

@@ -1,0 +1,218 @@
+# Welcome to Oobabot!
+#
+# This is the configuration file for Oobabot.  It is a YAML file, and
+# comments are allowed.  Oobabot attempts to load a file named
+# "config.yml" from the current directory when it is run.
+#
+
+version: 0.2.0
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# persona
+# .
+persona:
+  # Name the AI will use to refer to itself
+  #   default: oobabot
+  ai_name: DrGno
+
+  # This prefix will be added in front of every user-supplied request.  This is useful for
+  # setting up a 'character' for the bot to play.  Alternatively, this can be set with the
+  # OOBABOT_PERSONA environment variable.
+  persona: |
+    DrGno's Persona: DrGno is a terse crotchety old man, rude, sassy, offensive, jokester with an angry knack for problem solving and a passion for technology, who is not very friendly and reponds only with very short replies. DrGno likes to curse and make horrible insults.
+
+  # Path to a file containing a persona.  This can be just a single string, a json file in
+  # the common "tavern" formats, or a yaml file in the Oobabooga format.  With a single
+  # string, the persona will be set to that string.  Otherwise, the ai_name and persona will
+  # be overwritten with the values in the file.  Also, the wakewords will be extended to
+  # include the character's own name.
+  #   default:
+  # persona_file:
+
+  # One or more words that the bot will listen for. The bot will listen in all discord
+  # channels it can access for one of these words to be mentioned, then reply to any
+  # messages it sees with a matching word. The bot will always reply to @-mentions and
+  # direct messages, even if no wakewords are supplied.
+  #   default: ['oobabot']
+  wakewords: ['drgno','DrGno']
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# discord
+# .
+discord:
+  # Token to log into Discord with.  For security purposes it's strongly recommended that
+  # you set this via the DISCORD_TOKEN environment variable instead, if possible.
+  #discord_token: ""
+
+  # Post the entire response as a single message, rather than splitting it into separate
+  # messages by sentence.
+  #   default: False
+  dont_split_responses: True
+
+  # Number of lines of chat history the AI will see when generating a response.
+  #   default: 7
+  history_lines: 4
+
+  # If set, the bot will not respond to direct messages.
+  #   default: False
+  ignore_dms: False
+
+  # Set the log level.  Valid values are:
+  # CRITICAL, ERROR, WARNING, INFO, DEBUG
+  #   default: DEBUG
+  log_level: DEBUG
+
+  # If set, the bot will generate a thread to respond in if it is not already in one.
+  #   default: False
+  reply_in_thread: False
+
+  # A list of strings that will cause the bot to stop generating a response when
+  # encountered.
+  #   default: ['### End of Transcript ###<|endoftext|>', '<|endoftext|>']
+  stop_markers:
+
+  # FEATURE PREVIEW: Stream responses into a single message as they are generated. Note: may
+  # be janky
+  #   default: False
+  stream_responses: True
+
+  # FEATURE PREVIEW: Adds a limit to the number of channels the bot will post unsolicited
+  # messages in at the same time.  This is to prevent the bot from being too noisy in large
+  # servers.  When set, only the most recent N channels the bot has been summoned in will
+  # have a chance of receiving an unsolicited message.  The bot will still respond to
+  # @-mentions and wake words in any channel it can access.  Set to 0 to disable this
+  # feature.
+  #   default: 3
+  unsolicited_channel_cap:
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# oobabooga
+# .
+oobabooga:
+  # Base URL for the oobabooga instance.  This should be ws://hostname[:port] for plain
+  # websocket connections, or wss://hostname[:port] for websocket connections over TLS.
+  #   default: ws://localhost:5005
+  base_url: ws://192.168.50.249:5005
+
+  # Print all AI input and output to STDOUT.
+  #   default: False
+  log_all_the_things: True
+
+  # A regex that will be used to extract message lines from the AI's output.  The first
+  # capture group will be used as the message.  If this is not set, the entire output will
+  # be used as the message.
+  #   default:
+  message_regex:
+
+  # A dictionary which will be passed straight through to Oobabooga on every request.  Feel
+  # free to add additional simple parameters here as Oobabooga's API evolves. See
+  # Oobabooga's documentation for what these parameters mean.
+  request_params:
+    max_new_tokens: 250
+    do_sample: true
+    temperature: 1.3
+    top_p: 0.1
+    typical_p: 1
+    epsilon_cutoff: 0
+    eta_cutoff: 0
+    tfs: 1
+    top_a: 0
+    repetition_penalty: 1.18
+    top_k: 40
+    min_length: 0
+    no_repeat_ngram_size: 0
+    num_beams: 1
+    penalty_alpha: 0
+    length_penalty: 1
+    early_stopping: false
+    mirostat_mode: 0
+    mirostat_tau: 5
+    mirostat_eta: 0.1
+    seed: -1
+    add_bos_token: true
+    truncation_length: 2048
+    ban_eos_token: false
+    skip_special_tokens: true
+    stopping_strings: []
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# stable_diffusion
+# .
+stable_diffusion:
+  # When one of these words is used in a message, the bot will generate an image.
+  #   default: ['draw me', 'drawing', 'photo', 'pic', 'picture', 'image', 'sketch']
+  image_words:
+
+  # URL for an AUTOMATIC1111 Stable Diffusion server.
+  #   default:
+  stable_diffusion_url:
+  # http://192.168.50.249:7861
+
+  # This will be appended to every image generation prompt sent to Stable Diffusion.
+  #   default:
+  extra_prompt_text:
+
+  # A dictionary which will be passed straight through to Stable Diffusion on every request.
+  # Feel free to add additional simple parameters here as Stable Diffusion's API evolves.
+  # See Stable Diffusion's documentation for what these parameters mean.
+  request_params:
+    do_not_save_samples: true
+    do_not_save_grid: true
+    negative_prompt: animal harm, suicide, loli, nsfw
+    negative_prompt_nsfw: animal harm, suicide, loli
+    steps: 30
+    width: 512
+    height: 512
+    sampler: ""
+
+  # FEATURE PREVIEW: If set, the bot will ask Oobabooga to generate image keywords from a
+  # user's message.  It will then pass the keywords that Oobabooga produces to Stable
+  # Diffusion to finally generate an image. Otherwise, the bot will simply extract keywords
+  # directly from the user's message using a simple regex.
+  #   default: False
+  use_ai_generated_keywords:
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# template
+# .
+template:
+  # The main prompt sent to Oobabooga to generate a response from the bot AI.  The AI's
+  # reply to this prompt will be sent to discord as the bot's response.
+  # .
+  # Allowed tokens: {AI_NAME}, {IMAGE_COMING}, {MESSAGE_HISTORY}, {PERSONA}
+  # .
+  #   default:  You are in a chat room with multiple participants. Below is a transcript of
+  # recent messages in the conversation. Write the next one to three messages that you would
+  # send in this conversation, from the point of view of the participant named {AI_NAME}.
+  # {PERSONA}  All responses you write must be from the point of view of {AI_NAME}. ###
+  # Transcript: {MESSAGE_HISTORY} {IMAGE_COMING}
+  prompt:
+
+  # Part of the AI response-generation prompt, this is used to render a single line of chat
+  # history.  A list of these, one for each past chat message, will become {MESSAGE_HISTORY}
+  # and inserted into the main prompt
+  # .
+  # Allowed tokens: {USER_MESSAGE}, {USER_NAME}
+  # .
+  #   default:  {USER_NAME} says: {USER_MESSAGE}
+  prompt_history_line:
+
+  # Part of the AI response-generation prompt, this is used to inform the AI that it is in
+  # the process of generating an image.
+  # .
+  # Allowed tokens: {AI_NAME}
+  # .
+  #   default:  {AI_NAME}: is currently generating an image, as requested.
+  prompt_image_coming:
+
+  # Sent to Oobabooga, along with the user's image request, to generate             image
+  # keywords.  The AI's response to this prompt will then be sent             to Stable
+  # Diffusion to generate an image.
+  # .
+  # Allowed tokens: {AI_NAME}, {USER_MESSAGE}
+  # .
+  #   default:  Below is an instruction that describes a task, paired with an input that
+  # provides further context. Write a response that appropriately completes the request.
+  # ### Instruction: The input text asks for an image to be created.  Please create a list
+  # of keywords to describe that image.  ### Input: {USER_MESSAGE}  ### Response:
+  prompt_image_keywords:
